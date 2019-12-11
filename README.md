@@ -1,7 +1,9 @@
 # javascript-popup
 Самый просто скрипт всплывающих окон. Добавляет и удаляет указанному окну и оверлею (не обязательно) класс `active`, при нажатии на открывающую и закрывающую кнопку соответственно.
+
 Окно также закрывается при клике по оверлею, при нажатии клавиши esc на клавиатуре и прокрутке страницы на `100px` по умолчанию (кол-во px можно регулировать).
-Для анимации появления и исчезновения нужен css с указанными анимациями:
+
+Для анимации появления и исчезновения нужен css с указанием анимаций:
 ```css
 .popup {
 	display: none;
@@ -20,13 +22,17 @@
 	animation: fadeIn .5s; /* анимация появления */
 }
 ```
-Всплывающее окно можно вызвать в любой момент из любого месте при помощи функций `.open()` и `.close()`.
+Всплывающее окно можно вызвать в любой момент из любого места при помощи функций `.open()` и `.close()`.
+
 Есть несколько событий, к которым можно привязаться через `.addEventListener()` для совершения каких-то посторонних действий (очистке инпутов по закрытию и т.д.).
+
 Для корректной работы в IE нужно проделать кое-какие манипуляции (добавить полифилл и назначить анимации вручную через скрипт, об этом ниже).
-Подключеие скрипт:
+
+Подключеие скрипта:
 ```html
 <script src="SimplePopup.min.js"></script>
 ```
+
 Задание минимальных настроек:
 ```javascript
 let popup = new SimplePopup({
@@ -34,6 +40,7 @@ let popup = new SimplePopup({
   openBtn: '.open-popup-btn'
 });
 ```
+
 Можно указать оверлей:
 ```javascript
 let popup = new SimplePopup({
@@ -42,6 +49,7 @@ let popup = new SimplePopup({
   overlay: '.overlay'
 });
 ```
+
 Можно указать несколько открывающих кнопок:
 ```javascript
 let popup = new SimplePopup({
@@ -50,6 +58,7 @@ let popup = new SimplePopup({
   overlay: '.overlay'
 });
 ```
+
 Можно указать закрывающую кнопку:
 ```javascript
 let popup = new SimplePopup({
@@ -59,6 +68,7 @@ let popup = new SimplePopup({
   overlay: '.overlay'
 });
 ```
+
 События:
 ```javascript
 popup.addEventListener('beforeopen', func);
@@ -66,11 +76,13 @@ popup.addEventListener('open', func);
 popup.addEventListener('beforeclose', func);
 popup.addEventListener('close', func);
 ```
+
 Функции:
 ```javascript
 popup.open();
 popup.close();
 ```
+
 Для поддержки IE нужно подключить полифилл кастомных событий и настроить анимации вручную:
 ```javascript
 ;(function () {
@@ -98,6 +110,7 @@ let popup = new SimplePopup({
 		overlayAnimationName: 'fadeOut',  // имя анимации
 	});
 ```
+
 Все настройки:
 ```javascript
 let popup = new SimplePopup({
