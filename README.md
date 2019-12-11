@@ -64,7 +64,7 @@ let popup = new SimplePopup({
 let popup = new SimplePopup({
   popup: '.popup',
   openBtn: '.open-popup-btn, .open-popup-btn-two',
- 	closeBtn: '.popup-close-btn',
+  closeBtn: '.popup-close-btn',
   overlay: '.overlay'
 });
 ```
@@ -99,31 +99,31 @@ popup.close();
 })();
 
 let popup = new SimplePopup({
-		popup: '.popup',
-		openBtn: '.open-popup-btn',
-		closeBtn: '.popup-close-btn',
-		overlay: '.overlay',
-		// for IE support
-		popupAnimation: 'fadeOut .5s',    // функция анимации, аналогично css-свойству animation
-		overlayAnimation: 'fadeOut .5s',  // функция анимации, аналогично css-свойству animation
-		popupAnimationName: 'fadeOut',    // имя анимации
-		overlayAnimationName: 'fadeOut',  // имя анимации
-	});
+  popup: '.popup',
+  openBtn: '.open-popup-btn',
+  closeBtn: '.popup-close-btn',
+  overlay: '.overlay',
+  // for IE support
+  popupAnimation: 'fadeOut .5s',    // функция анимации, аналогично css-свойству animation
+  overlayAnimation: 'fadeOut .5s',  // функция анимации, аналогично css-свойству animation
+  popupAnimationName: 'fadeOut',    // имя анимации
+  overlayAnimationName: 'fadeOut',  // имя анимации
+});
 ```
 
 Все настройки:
 ```javascript
 let popup = new SimplePopup({
-		popup: '',								// css-селектор всплывающего окна
-		openBtn: '',							// css-селектор открывающей кнопки (можно несколько кнопок)
-		closeBtn: '',							// css-селектор закрывающей кнопки
-		overlay: '',							// css-селектор оверлея
-		// Для корректной работы d Internet explorer
-		popupAnimation: '',				// функция анимации, аналогично css-свойству animation
-		overlayAnimation: '',			// функция анимации, аналогично css-свойству animation
-		popupAnimationName: '',		// имя анимации
-		overlayAnimationName: '',	// имя анимации
-		esc: boolean,							// true или false - закрывание окна нажатием клавиши esc
-		scrollThreshold: num			// число - сколько пикселей на странице нужно прокрутить, чтобы закрылось окно
-	});
+  popup: '',                // css-селектор всплывающего окна
+  openBtn: '',              // css-селектор открывающей кнопки (можно несколько кнопок)
+  closeBtn: '',             // css-селектор закрывающей кнопки
+  overlay: '',              // css-селектор оверлея
+  // Для корректной работы а Internet explorer
+  popupAnimation: '',       // функция анимации, аналогично css-свойству animation
+  overlayAnimation: '',     // функция анимации, аналогично css-свойству animation
+  popupAnimationName: '',   // имя анимации
+  overlayAnimationName: '', // имя анимации
+  esc: boolean,             // true или false - закрывание окна нажатием клавиши esc
+  scrollThreshold: num      // число - сколько пикселей на странице нужно прокрутить, чтобы закрылось окно
+});
 ```
