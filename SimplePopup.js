@@ -39,6 +39,7 @@
 			_.assign(def, opt);
 			_.assign(ini, _);
 			_.init();
+			_.$popup.ctx = _;
 			return _.$popup;
 		}
 		return popup;
@@ -85,7 +86,7 @@
 		};
 
 		_.$popup.open = _.openPopup;
-		_.$popup.close = _.openPopup;
+		_.$popup.close = _.closePopup;
 
 		_.initEvents();
 	}
@@ -132,7 +133,7 @@
 	SimplePopup.prototype.openPopup = function() {
 		let _ = this.ctx || this;
 
-		_.$popup.caller = event.currentTarget;
+		_.$popup.caller = event && event.currentTarget;
 
 		if (!_.$popup.classList.contains('active')) {
 			_.$popup.classList.add('active');
@@ -155,13 +156,13 @@
 	}
 
 	SimplePopup.prototype.closePopup = function() {
-		if (event.type === 'keyup' && event.keyCode !== 27) {
+		if (event && event.type === 'keyup' && event.keyCode !== 27) {
 			return;
 		}
 
 		let _ = this.ctx || this;
 
-		if (event.type === 'scroll' && pageYOffset - _.pageY <= _.options.scrollThreshold) {
+		if (event && event.type === 'scroll' && pageYOffset - _.pageY <= _.options.scrollThreshold) {
 			return;
 		}
 
