@@ -24,14 +24,14 @@
 				closeBtn: '',
 				scrollThreshold: 100,
 				esc: true
-			}
+			};
 
 			_.initials = ini = {
 				$popup: null,
 				$overlay: null,
 				$closeBtn: null,
 				$openBtn: null,
-			}
+			};
 
 			// assign defaults and options
 			// assign initials and _
@@ -39,7 +39,7 @@
 			_.assign(def, opt);
 			_.assign(ini, _);
 			_.init();
-			_.$popup.ctx = _;
+		
 			return _.$popup;
 		}
 		return popup;
@@ -52,7 +52,7 @@
 				obj2[key] = obj1[key];
 			}
 		}
-	}
+	};
 
 	SimplePopup.prototype.init = function() {
 		let _ = this,
@@ -65,7 +65,9 @@
 			let el = '$' + elements[i];
 			if (_[el] !== false && opt[elements[i]] !== '') {
 				_[el] = document['querySelector' + (i === 2 ? 'All' : '')](opt[elements[i]]);
-
+				if (elements[i] === 'popup' && !_[el]) {
+					return;
+				}
 				// get 'out' animation
 				if (i <= 1) {
 					_[elements[i] + 'Animation'] = window.getComputedStyle(_[el]).animation || opt[elements[i] + 'Animation'];
@@ -73,6 +75,8 @@
 				}
 			}
 		}
+
+		_.$popup.ctx = _;
 
 		// context events
 		_.openPopupHandler = {
@@ -89,14 +93,14 @@
 		_.$popup.close = _.closePopup;
 
 		_.initEvents();
-	}
+	};
 
 	SimplePopup.prototype.initEvents = function() {
 		let _ = this,
 			arr = ['popup', 'overlay'];
 
 		for (let i = 0; i < _.$openBtn.length; i++) {
-			_.$openBtn[i].addEventListener('click', _.openPopupHandler);
+			_.$openBtn[i] && _.$openBtn[i].addEventListener('click', _.openPopupHandler);
 		}
 
 		if (_.$closeBtn) {
@@ -109,7 +113,7 @@
 
 		let e = new CustomEvent('init');
 		_.$popup.dispatchEvent(e);
-	}
+	};
 
 	SimplePopup.prototype.initAnimationEndEvents = function(ctx, elem) {
 		let str = '$' + elem; // _.$popup || _.$overlay
@@ -128,7 +132,7 @@
 				}
 			});
 		}
-	}
+	};
 
 	SimplePopup.prototype.openPopup = function() {
 		let _ = this.ctx || this;
@@ -153,7 +157,7 @@
 			let e = new CustomEvent('beforeopen');
 			_.$popup.dispatchEvent(e);
 		}
-	}
+	};
 
 	SimplePopup.prototype.closePopup = function() {
 		if (event && event.type === 'keyup' && event.keyCode !== 27) {
@@ -183,7 +187,7 @@
 
 		let e = new CustomEvent('beforeclose');
 		_.$popup.dispatchEvent(e);
-	}
+	};
 
 	return SimplePopup;
 });
