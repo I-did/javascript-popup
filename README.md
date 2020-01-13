@@ -1,53 +1,51 @@
 # javascript-popup
-Очень простой скрипт всплывающих окон, с помощью которого можно легко создавать много всплывающих окон на сайте, независимых друг от друга. Скрипт добавляет и удаляет указанному окну и оверлею (не обязательно) класс `active`, при нажатии на открывающую и закрывающую кнопку соответственно.
-
-Окно также закрывается при клике по оверлею, при нажатии клавиши esc на клавиатуре и прокрутке страницы на `100px` по умолчанию (кол-во px можно регулировать).
-
-Для анимации появления и исчезновения нужен css с указанием анимаций:
+Очень простой скрипт для создания множества всплывающих окон. Подходит для многостраничных сайтов.
+```html
+<script src="./SimplePopup.min.js"></script>
+```
+```javascript
+let popup = new SimplePopup({
+  popup: '.popup',              // css-селектор окна
+  openBtn: '.open-popup-btn',   // css-селектор открывающей кнопки
+  closeBtn: '.popup-close-btn', // css-селектор закрывающей кнопки
+  overlay: '.overlay'           // css-селектор блока-затемнения контента
+});
+```
+При нажатии на открывающую кнопку, всплывающему окну и оверлею (если он указан) добавляется класс `active`.
+При нажатии на закрывающую кнопку, оверлей, клавишу esc, а так же прокрутки страницы на 100px, класс `active` удаляется. Для эффекта закрытия и открытия окна нужно добавить css:
 ```css
 .popup {
-	display: none;
-	animation: fadeOut .5s; /* анимация исчезновения */
+  display: none;
+  animation: fadeOut .5s; /* анимация исчезновения */
 }
 .popup.active {
-	display: block;
-	animation: fadeIn .5s; /* анимация появления */
+  display: block;
+  animation: fadeIn .5s; /* анимация появления */
 }
 .overlay {
-	display: none;
-	animation: fadeOut .5s; /* анимация исчезновения */
+  display: none;
+  animation: fadeOut .5s; /* анимация исчезновения */
 }
 .overlay.active {
-	display: block;
-	animation: fadeIn .5s; /* анимация появления */
+  display: block;
+  animation: fadeIn .5s; /* анимация появления */
 }
 ```
+Имена анимаций могут быть любые.
+
 Всплывающее окно можно вызвать в любой момент из любого места при помощи функций `.open()` и `.close()`.
+```javascript
+setTimeout(function() {
+  popup.open();
+}, 1000);
+```
 
 Есть несколько событий, к которым можно привязаться через `.addEventListener()` для совершения каких-то посторонних действий (очистке инпутов по закрытию окна и т.д.).
-
-Для корректной работы в IE нужно добавить полифилл и указать анимации в настройке явно, об этом ниже.
-
-Подключеие скрипта:
-```html
-<script src="SimplePopup.min.js"></script>
-```
-
-Задание минимальных настроек:
 ```javascript
-let popup = new SimplePopup({
-  popup: '.popup',
-  openBtn: '.open-popup-btn'
-});
-```
-
-Можно указать оверлей:
-```javascript
-let popup = new SimplePopup({
-  popup: '.popup',
-  openBtn: '.open-popup-btn',
-  overlay: '.overlay'
-});
+popup.addEventListener('beforeopen', func);
+popup.addEventListener('open', func);
+popup.addEventListener('beforeclose', func);
+popup.addEventListener('close', func);
 ```
 
 Можно указать несколько открывающих кнопок:
@@ -58,7 +56,6 @@ let popup = new SimplePopup({
   overlay: '.overlay'
 });
 ```
-Если сайт многостраничный и на одной странице кнопка '.popup-open-btn', а на другой странице кнопка '.consult-popup-btn' вызывают одно и то же окно, то перечисление этих кнопок `openBtn: '.popup-open-btn, .consult-popup-btn'` не приведет к ошибке скрипта.
 
 Можно указать закрывающую кнопку:
 ```javascript
@@ -68,20 +65,6 @@ let popup = new SimplePopup({
   closeBtn: '.popup-close-btn',
   overlay: '.overlay'
 });
-```
-
-События:
-```javascript
-popup.addEventListener('beforeopen', func);
-popup.addEventListener('open', func);
-popup.addEventListener('beforeclose', func);
-popup.addEventListener('close', func);
-```
-
-Функции:
-```javascript
-popup.open();
-popup.close();
 ```
 
 Для поддержки IE нужно подключить полифилл кастомных событий и указать анимации в скрипте явно:
@@ -110,6 +93,20 @@ let popup = new SimplePopup({
   popupAnimationName: 'fadeOut',    // имя анимации
   overlayAnimationName: 'fadeOut',  // имя анимации
 });
+```
+
+События:
+```javascript
+popup.addEventListener('beforeopen', func);
+popup.addEventListener('open', func);
+popup.addEventListener('beforeclose', func);
+popup.addEventListener('close', func);
+```
+
+Функции:
+```javascript
+popup.open();
+popup.close();
 ```
 
 Все настройки:
