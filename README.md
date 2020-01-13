@@ -12,7 +12,7 @@ let popup = new SimplePopup({
 });
 ```
 При нажатии на открывающую кнопку, всплывающему окну и оверлею (если он указан) добавляется класс `active`.
-При нажатии на закрывающую кнопку, оверлей, клавишу esc, а так же прокрутки страницы на 100px, класс `active` удаляется. Для эффекта закрытия и открытия окна нужно добавить css:
+При нажатии на закрывающую кнопку, оверлей, клавишу esc, а так же прокрутке страницы на 100px, класс `active` удаляется. Для эффекта закрытия и открытия окна нужно добавить css:
 ```css
 .popup {
   display: none;
@@ -32,6 +32,7 @@ let popup = new SimplePopup({
 }
 ```
 Имена анимаций могут быть любые.
+Значения `display` в классе `active` могут быть любые.
 
 Всплывающее окно можно вызвать в любой момент из любого места при помощи функций `.open()` и `.close()`.
 ```javascript
@@ -40,12 +41,15 @@ setTimeout(function() {
 }, 1000);
 ```
 
-Есть несколько событий, к которым можно привязаться через `.addEventListener()` для совершения каких-то посторонних действий (очистке инпутов по закрытию окна и т.д.).
+Есть несколько событий, к которым можно привязаться через `.addEventListener()` для совершения каких-то посторонних действий. Например, очистить поля ввода по закрытию окна:
 ```javascript
-popup.addEventListener('beforeopen', func);
-popup.addEventListener('open', func);
-popup.addEventListener('beforeclose', func);
-popup.addEventListener('close', func);
+popup.addEventListener('beforeclose', function() {
+  let fields = popup.querySelectorAll('input, textarea');
+
+  fields.forEach(function(el) {
+    el.value = '';
+  });
+});
 ```
 
 Можно указать несколько открывающих кнопок:
@@ -95,7 +99,7 @@ let popup = new SimplePopup({
 });
 ```
 
-События:
+#### События:
 ```javascript
 popup.addEventListener('beforeopen', func);
 popup.addEventListener('open', func);
@@ -103,13 +107,13 @@ popup.addEventListener('beforeclose', func);
 popup.addEventListener('close', func);
 ```
 
-Функции:
+#### Функции:
 ```javascript
 popup.open();
 popup.close();
 ```
 
-Все настройки:
+#### Все настройки:
 ```javascript
 let popup = new SimplePopup({
   popup: '',                // css-селектор всплывающего окна
