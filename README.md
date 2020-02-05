@@ -5,7 +5,7 @@
 ```
 ```javascript
 let popup = new SimplePopup({
-  popup: '.popup',              // css-селектор окна
+  popup: '.popup',              // css-селектор окна (обязательно)
   openBtn: '.open-popup-btn',   // css-селектор открывающей кнопки
   closeBtn: '.popup-close-btn', // css-селектор закрывающей кнопки
   overlay: '.overlay'           // css-селектор блока-затемнения контента
@@ -61,6 +61,13 @@ let popup = new SimplePopup({
 });
 ```
 
+Можно узнать какая именно кнопка вызвала окно:
+```javascript
+popup.addEventListener('beforeopen', function() {
+  console.log(this.caller);
+});
+```
+
 Можно указать закрывающую кнопку:
 ```javascript
 let popup = new SimplePopup({
@@ -71,7 +78,7 @@ let popup = new SimplePopup({
 });
 ```
 
-Для поддержки IE нужно подключить полифилл кастомных событий и указать анимации в скрипте явно:
+Для поддержки событий в IE нужно подключить полифилл кастомных событий и указать анимации в скрипте явно:
 ```javascript
 ;(function () {
   if (typeof window.CustomEvent === "function") return false;
@@ -94,8 +101,6 @@ let popup = new SimplePopup({
   // for IE support
   popupAnimation: 'fadeOut .5s',    // параметры анимации, аналогично css-свойству animation
   overlayAnimation: 'fadeOut .5s',  // параметры анимации, аналогично css-свойству animation
-  popupAnimationName: 'fadeOut',    // имя анимации
-  overlayAnimationName: 'fadeOut',  // имя анимации
 });
 ```
 
@@ -109,22 +114,22 @@ popup.addEventListener('close', func);
 
 #### Функции:
 ```javascript
-popup.open();
-popup.close();
+popup.open();                   // открывает окно
+popup.close();                  // закрывает окноа
+popup.openBtn.refresh();        // обновляет открывающие кнокпи (например, если на страницу добавились новые)
+popup.openBtn.add('selector');  // добавляет кнопки
 ```
 
 #### Все настройки:
 ```javascript
 let popup = new SimplePopup({
-  popup: '',                // css-селектор всплывающего окна
+  popup: '',                // css-селектор всплывающего окна (обязательный)
   openBtn: '',              // css-селектор открывающей кнопки (можно несколько кнопок)
   closeBtn: '',             // css-селектор закрывающей кнопки
   overlay: '',              // css-селектор оверлея
   // Для корректной работы а Internet explorer
   popupAnimation: '',       // параметры анимации, аналогично css-свойству animation
   overlayAnimation: '',     // параметры анимации, аналогично css-свойству animation
-  popupAnimationName: '',   // имя анимации
-  overlayAnimationName: '', // имя анимации
   esc: boolean,             // true или false - закрывание окна нажатием клавиши esc
   scrollThreshold: num      // число - сколько пикселей на странице нужно прокрутить, чтобы закрылось окно
 });

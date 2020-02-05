@@ -30,6 +30,9 @@ button {
 	outline: none;
 	cursor: pointer;
 }
+.example {
+	margin-top: 100px;
+}
 .popup {
 	max-width: 320px;
 	width: 100%;
@@ -108,13 +111,13 @@ button {
 .popup-form-btn:active,.open-popup-btn:active,.open-popup-another-btn:active {
 	transform: scale(.95);
 }
-.popup-form-btn:hover,.open-popup-btn:hover,.open-popup-another-btn:hover {
+.popup-form-btn:hover,.open-popup-btn:hover,.open-popup-another-btn:hover,.open-popup-btn-two:hover {
 	color: orange;
 	border-color: orange;
 	background-color: transparent;
 }
 
-.open-popup-btn,.open-popup-another-btn {
+.open-popup-btn,.open-popup-another-btn, .open-popup-btn-two {
 	max-width: 200px;
 	width: 100%;
 	height: 50px;
@@ -124,6 +127,10 @@ button {
 	border: 2px solid transparent;
 	margin: 10px;
 	transition: all .25s;
+}
+
+.open-popup-btn-two {
+	/*transform: translateY(100px);*/
 }
 
 .overlay {

@@ -4,41 +4,13 @@
 	<meta charset="UTF-8">
 	<meta name="viewport" content="width=device-width, initial-scale=1.0">
 	<meta http-equiv="X-UA-Compatible" content="ie=edge">
-	<link rel="stylesheet" href="./src/style.css">
+	<link rel="stylesheet" href="style.css">
 	<title>SimplePopup</title>
 </head>
 <body>
-	<div class="example">
-		<code>
-			<pre>
-  let popup = new SimplePopup({
-    popup: '.popup',
-    openBtn: '.open-popup-btn, .open-popup-another-btn',
-    closeBtn: '.popup-close-btn',
-    overlay: '.overlay',
-    // for IE support
-    popupCloseAnimation: 'fadeOut .5s',
-    overlayCloseAnimation: 'fadeOut .5s',
-    esc: false,
-  });
-			</pre>
-		</code>
-		<button type="button" class="open-popup-btn" title="Открыть окно 1">.open-popup-btn</button>
-		<button type="button" class="open-popup-another-btn" title="Открыть окно 1"><span>.open-popup-another-btn</span></button>
-	</div>
-	<div class="example">
-		<code>
-			<pre>
-  let popup2 = new SimplePopup({
-    popup: '.two',
-    openBtn: '.open-popup-btn-two',
-    closeBtn: '.close-two',
-    overlay: '.overlay'
-  });
-			</pre>
-		</code>
-		<button type="button" class="open-popup-btn-two">Открыть окно (1 (2))</button>
-	</div>
+	<button type="button" class="open-popup-btn">Открыть окно (1)</button>
+	<button type="button" class="open-popup-another-btn"><span>Открыть окно (2)</span></button>
+	<button type="button" class="open-popup-btn-two">Открыть окно (1 (2))</button>
 	<div class="popup">
 		<button type="button" class="popup-close-btn">&#10006;</button>
 		<b class="popup-title">Заказать звонок (1)</b>
@@ -58,8 +30,8 @@
 		</form>
 	</div>
 	<div class="overlay"></div>
-	<!-- <script src="./src/SimplePopup.js"></script> -->
-	<script src="./dist/SimplePopup.min.js"></script>
+	<script src="./SimplePopup.js"></script>
+	<!-- <script src="./SimplePopup.min.js"></script> -->
 <script>
 	
 document.addEventListener('DOMContentLoaded', function(){
@@ -78,15 +50,16 @@ document.addEventListener('DOMContentLoaded', function(){
 	})();
 	let popup = new SimplePopup({
 		popup: '.popup',
-		openBtn: '.open-popup-btn, .open-popup-another-btn',
-		closeBtn: '.popup-close-btn',
+		// openBtn: '.open-popup-btn, .open-popup-another-btn',
+		// closeBtn: '.popup-close-btn',
 		overlay: '.overlay',
 		// for IE support
 		popupCloseAnimation: 'fadeOut .5s',
 		overlayCloseAnimation: 'fadeOut .5s',
 		esc: false,
+		// scrollThreshold: 50
 	});
-
+console.log([popup]);
 	popup.addEventListener('beforeopen', function() {
 		// console.log(this.caller);
 	});
@@ -98,12 +71,12 @@ document.addEventListener('DOMContentLoaded', function(){
 	// beforeclose
 	// close
 
-	let popup2 = new SimplePopup({
-		popup: '.two',
-		openBtn: '.open-popup-btn-two',
-		closeBtn: '.close-two',
-		overlay: '.overlay'
-	});
+	// let popup2 = new SimplePopup({
+	// 	popup: '.two',
+	// 	openBtn: '.open-popup-another-btn',
+	// 	closeBtn: '.close-two',
+	// 	overlay: '.overlay'
+	// });
 });
 </script>
 </body>
