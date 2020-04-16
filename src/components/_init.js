@@ -12,19 +12,8 @@
 				if (elements[i] === 'popup' && !_[el]) {
 					return;
 				}
-				// get 'close' animation
-				if (i <= 1) {
-					let elCloseAnim = getComputedStyle(_[el]).animation;
-					if (elCloseAnim === '') {
-						elCloseAnim = opt[elements[i] + 'CloseAnimation'];
-					}
-					if (!elCloseAnim) {
-						console.error('Set the closing animation for ' + elements[i]);
-						return;
-					}
-					_[elements[i] + 'CloseAnimation'] = elCloseAnim;
-				}
 			}
+
 		}
 
 		_.$popup.ctx = _;
@@ -40,8 +29,8 @@
 			ctx: _
 		};
 
-		_.$popup.open = _.openPopup;
-		_.$popup.close = _.closePopup;
+		_.$popup.openPopup = _.openPopup;
+		_.$popup.closePopup = _.closePopup;
 
 		_.initEvents();
 		_.initOpenBtns();

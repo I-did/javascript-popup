@@ -1,25 +1,32 @@
-	SimplePopup.prototype.openPopup = function() {
-		let _ = this.ctx || this;
-		_.iosFix();
+SimplePopup.prototype.openPopup = function() {
+	let _ = this.ctx || this,
+		overlay = _.$overlay,
+		popup = _.$popup;
 
-		_.$popup.caller = event && event.currentTarget;
+	_.iosFix();
 
-		if (!_.$popup.classList.contains('active')) {
-			_.$popup.classList.add('active');
+	popup.caller = event && event.currentTarget;
 
-			_.pageY = pageYOffset;
+	if (!popup.classList.contains('active')) {
 
-			if (_.$overlay) {
-				_.$overlay.classList.add('active');
-				_.$overlay.addEventListener('click', _.closePopupHandler);
-			}
+		_.pageY = pageYOffset;
 
-			if (_.options.esc) {
-				document.addEventListener('keyup', _.closePopupHandler);
-			}
-			document.addEventListener('scroll', _.closePopupHandler);
+		popup.classList.add('active');
+		_.playAnimation('popup', 'open');
 
-			let e = new CustomEvent('beforeopen');
-			_.$popup.dispatchEvent(e);
+		if (overlay) {
+			overlay.classList.add('active');
+			_.playAnimation('overlay', 'open');
+
+			overlay.addEventListener('click', _.closePopupHandler);
 		}
-	};
+
+		if (_.options.escToClose) {
+			document.addEventListener('keyup', _.closePopupHandler);
+		}
+		document.addEventListener('scroll', _.closePopupHandler);
+
+  	_.dispatchEvent(popup, 'popupbeforeopen');
+
+	}
+};

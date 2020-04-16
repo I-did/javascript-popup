@@ -1,19 +1,39 @@
-	SimplePopup.prototype.initAnimationEndEvents = function(_, elem) {
-		let el = '$' + elem; // _.$popup || _.$overlay
-		if (_[el]) {
-			_[el].addEventListener('animationend', function() {
-				let closeAnim = _[elem + 'CloseAnimation'].search(event.animationName);
-				if (closeAnim !== -1) {
-					this.style.animation = '';
-					this.classList.remove('active');
-					if (elem === 'popup') {
-						let e = new CustomEvent('close');
-						_[el].dispatchEvent(e);
-					}
-				} else if (closeAnim === -1 && elem === 'popup') {
-					let e = new CustomEvent('open');
-					_[el].dispatchEvent(e);
+SimplePopup.prototype.initAnimationEndEvents = function(_, elem) {
+	let $elem = _['$' + elem];
+
+	if ($elem) {
+		let animation = _.options.animation[elem],
+			transition = _.options.transition[elem];
+
+		if (animation) {
+			$elem.addEventListener('animationend', function() {
+				if (event.animationName === animation.open.name) {
+					_.dispatchEvent($elem, elem + 'open');
+					// console.log(event, elem + 'open');
+				} else {
+					$elem.style.animation = '';
+					$elem.classList.remove('active');
+					_.dispatchEvent($elem, elem + 'close');
+					// console.log(event, elem + 'close');
+				}
+			});
+		} else if (transition) {
+
+			$elem.style[transition.property] = transition.from;
+
+			$elem.addEventListener('transitionend', function() {
+				if ($elem.style[transition.property] == transition.to) {
+					_.dispatchEvent($elem, elem + 'open');
+					// console.log(event, elem + 'open');
+				} else {
+					$elem.style.transition = '';
+					$elem.classList.remove('active');
+					_.dispatchEvent($elem, elem + 'close');
+					// console.log(event, elem + 'close');
 				}
 			});
 		}
-	};
+
+	}
+
+};

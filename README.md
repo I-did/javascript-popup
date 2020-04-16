@@ -12,38 +12,69 @@ let popup = new SimplePopup({
 });
 ```
 При нажатии на открывающую кнопку, всплывающему окну и оверлею (если он указан) добавляется класс `active`.
-При нажатии на закрывающую кнопку, оверлей, клавишу esc, а так же прокрутке страницы на 100px, класс `active` удаляется. Для эффекта закрытия и открытия окна нужно добавить css:
-```css
-.popup {
-  display: none;
-  animation: fadeOut .5s; /* анимация исчезновения */
-}
-.popup.active {
-  display: block;
-  animation: fadeIn .5s; /* анимация появления */
-}
-.overlay {
-  display: none;
-  animation: fadeOut .5s; /* анимация исчезновения */
-}
-.overlay.active {
-  display: block;
-  animation: fadeIn .5s; /* анимация появления */
+При нажатии на закрывающую кнопку, оверлей, клавишу esc, а так же прокрутке страницы на 100px, класс `active` удаляется.
+Для плавного эффекта закрытия и открытия окна не нужен дополнительный css. По умолчанию срабатывает плавный переход с  `opacity`. Можно регулировать некоторые параметры перехода (`property`, `from`, `to`, `duration`, `timingFunction` `delay`):
+```javascript
+transition: {
+  popup: {
+    property: 'opacity',
+    from: 0,
+    to: 1,
+    timigFunction: 'ease',
+    delay: 0,
+    duration: 0.5
+  },
+  overlay: {
+    property: 'opacity',
+    from: 0,
+    to: 1,
+    timigFunction: 'ease',
+    delay: 0,
+    duration: 0.5
+  }
 }
 ```
-Имена анимаций могут быть любые.
-Значения `display` в классе `active` могут быть любые.
 
-Всплывающее окно можно вызвать в любой момент из любого места при помощи функций `.open()` и `.close()`.
+Также можно установить анимации:
+```javascript
+animation: {
+  popup: {
+    open: {
+      name: 'zoomIn',
+      timigFunction: 'ease-in-out',
+      duration: 0.5,
+      delay: 0
+    },
+    close: {
+      name: 'zoomOut',
+      delay: 0,
+      timigFunction: 'ease-in-out',
+      duration: 0.5
+    }
+  }
+}
+```
+
+Можно использовать значения по отдельности:
+```javascript
+// Установим задежрку плавного перехода в 1 секунду
+transition: {
+  popup: {
+    delay: 1
+  }
+}
+```
+
+Всплывающее окно можно вызвать в любой момент из любого места при помощи функций `.openPopup()` и `.closePopup()`.
 ```javascript
 setTimeout(function() {
-  popup.open();
+  popup.openPopup();
 }, 1000);
 ```
 
 Есть несколько событий, к которым можно привязаться через `.addEventListener()` для совершения каких-то посторонних действий. Например, очистить поля ввода по закрытию окна:
 ```javascript
-popup.addEventListener('beforeclose', function() {
+popup.addEventListener('popupbeforeclose', function() {
   let fields = popup.querySelectorAll('input, textarea');
 
   fields.forEach(function(el) {
@@ -63,7 +94,7 @@ let popup = new SimplePopup({
 
 Можно узнать какая именно кнопка вызвала окно:
 ```javascript
-popup.addEventListener('beforeopen', function() {
+popup.addEventListener('popupbeforeopen', function() {
   console.log(this.caller);
 });
 ```
@@ -78,7 +109,7 @@ let popup = new SimplePopup({
 });
 ```
 
-Для поддержки событий в IE нужно подключить полифилл кастомных событий и указать анимации в скрипте явно:
+Для поддержки событий в IE нужно подключить полифилл кастомных событий:
 ```javascript
 ;(function () {
   if (typeof window.CustomEvent === "function") return false;
@@ -97,27 +128,28 @@ let popup = new SimplePopup({
   popup: '.popup',
   openBtn: '.open-popup-btn',
   closeBtn: '.popup-close-btn',
-  overlay: '.overlay',
-  // for IE support
-  popupAnimation: 'fadeOut .5s',    // параметры анимации, аналогично css-свойству animation
-  overlayAnimation: 'fadeOut .5s',  // параметры анимации, аналогично css-свойству animation
+  overlay: '.overlay'
 });
 ```
 
 #### События:
 ```javascript
-popup.addEventListener('beforeopen', func);
-popup.addEventListener('open', func);
-popup.addEventListener('beforeclose', func);
-popup.addEventListener('close', func);
+popup.addEventListener('popupinit', func);
+popup.addEventListener('popupbeforeopen', func);
+popup.addEventListener('popupopen', func);
+popup.addEventListener('popupbeforeclose', func);
+popup.addEventListener('popupclose', func);
+
+popup.addEventListener('overlayopen', func);
+popup.addEventListener('overlayclose', func);
 ```
 
 #### Функции:
 ```javascript
-popup.open();                   // открывает окно
-popup.close();                  // закрывает окноа
+popup.openPopup();               // открывает окно
+popup.closePopup();              // закрывает окноа
 popup.openBtn.refresh();        // обновляет открывающие кнокпи (например, если на страницу добавились новые)
-popup.openBtn.add('selector');  // добавляет кнопки
+popup.openBtn.add('selector');  // добавляет кнопки вручную
 ```
 
 #### Все настройки:
@@ -127,10 +159,41 @@ let popup = new SimplePopup({
   openBtn: '',              // css-селектор открывающей кнопки (можно несколько кнопок)
   closeBtn: '',             // css-селектор закрывающей кнопки
   overlay: '',              // css-селектор оверлея
-  // Для корректной работы а Internet explorer
-  popupAnimation: '',       // параметры анимации, аналогично css-свойству animation
-  overlayAnimation: '',     // параметры анимации, аналогично css-свойству animation
-  esc: boolean,             // true или false - закрывание окна нажатием клавиши esc
-  scrollThreshold: num      // число - сколько пикселей на странице нужно прокрутить, чтобы закрылось окно
+  escToClose: true,         // true или false - закрывание окна нажатием клавиши esc
+  scrollThreshold: 100,     // число - сколько пикселей на странице нужно прокрутить, чтобы закрылось окно
+  animation: {              // по умолчанию пустая строка
+    popup: {
+      open: {
+        name: 'animationName',
+        timigFunction: 'timigFunction',
+        duration: 0.5,
+        delay: 0
+      },
+      close: {
+        name: 'animationName',
+        delay: 0,
+        timigFunction: 'timigFunction',
+        duration: 0.5
+      }
+    }
+  },
+  transition: {
+    popup: {
+      property: 'opacity',
+      from: 0,
+      to: 1,
+      timigFunction: 'ease',
+      delay: 0,
+      duration: 0.5
+    },
+    overlay: {
+      property: 'opacity',
+      from: 0,
+      to: 1,
+      timigFunction: 'ease',
+      delay: 0,
+      duration: 0.5
+    }
+  }
 });
 ```

@@ -8,95 +8,153 @@
 	}
 })(function() {
 
-		let	SimplePopup = (function() {
+	let	SimplePopup = (function() {
 
-			function popup(options) {
+		function popup(options) {
 
-				let _ = this,
+			let _ = this,
 
-				opt,
+			opt,
 
-				def,
+			def,
 
-				ini;
-
-
-
-					_.options = opt = options;
+			ini;
 
 
 
-					_.defaults = def = {
-
-					popup: '',
-
-					overlay: '',
-
-					openBtn: '',
-
-					closeBtn: '',
-
-					scrollThreshold: 100,
-
-					esc: true
-
-				};
+				_.options = opt = options;
 
 
 
-					_.initials = ini = {
+				_.defaults = def = {
 
-					$popup: null,
+				popup: '',
 
-					$overlay: null,
+				overlay: '',
 
-					$closeBtn: null,
+				openBtn: '',
 
-					$openBtn: null,
+				closeBtn: '',
 
-					$inputs: null
+				scrollThreshold: 100,
 
-				};
+				escToClose: true,
 
+				clickToClose: 'overlay',
 
+				animation: '',
 
+				transition: {
 
+					popup: {
 
+						property: 'opacity',
 
+						from: 0,
 
-					_.assign(def, opt);
+						to: 1,
 
-				_.assign(ini, _);
+						timigFunction: 'ease',
 
-				_.iosRegExp = /iPhone|iPad|iPod/i;
+						delay: 0,
 
-				_.init();
+						duration: 0.5
 
+					},
 
+					overlay: {
 
-								return _.$popup;
+						property: 'opacity',
 
-			}
+						from: 0,
 
-			return popup;
+						to: 1,
 
-		})();
+						timigFunction: 'ease',
 
+						delay: 0,
 
+						duration: 0.5
 
-			SimplePopup.prototype.assign = function(obj1, obj2) {
-
-			for (let key in obj1) {
-
-				if (obj2[key] === undefined) {
-
-					obj2[key] = obj1[key];
+					}
 
 				}
 
+			};
+
+
+
+				_.initials = ini = {
+
+				$popup: null,
+
+				$overlay: null,
+
+				$closeBtn: null,
+
+				$openBtn: null,
+
+				$inputs: null
+
+			};
+
+
+
+
+
+
+
+				_.assign(def, opt);
+
+			_.assign(ini, _);
+
+			_.iosRegExp = /iPhone|iPad|iPod/i;
+
+			_.init();
+
+			console.log(_);
+
+			return _.$popup;
+
+		}
+
+		return popup;
+
+	})();
+
+
+
+		SimplePopup.prototype.assign = function(obj1, obj2) {
+
+		for (let key in obj1) {
+
+			if (obj2[key] === undefined) {
+
+				obj2[key] = obj1[key];
+
+			} else if (typeof obj2[key] === 'object') {
+
+				this.assign(obj1[key], obj2[key]);
+
 			}
 
-		};
+		}
+
+	};
+
+
+
+		SimplePopup.prototype.dispatchEvent = function(element, eventName) {
+
+		if (typeof window.CustomEvent === "function") {
+
+	  	let evt = new CustomEvent(eventName);
+
+	  	element.dispatchEvent(evt);
+
+		}	
+
+	};
 		SimplePopup.prototype.init = function() {
 			let _ = this,
 				opt = _.options,
@@ -110,19 +168,9 @@
 					if (elements[i] === 'popup' && !_[el]) {
 						return;
 					}
-					if (i <= 1) {
-						let elCloseAnim = getComputedStyle(_[el]).animation;
-						if (elCloseAnim === '') {
-							elCloseAnim = opt[elements[i] + 'CloseAnimation'];
-						}
-						if (!elCloseAnim) {
-							console.error('Set the closing animation for ' + elements[i]);
-							return;
-						}
-						_[elements[i] + 'CloseAnimation'] = elCloseAnim;
-					}
 				}
-			}
+
+				}
 
 				_.$popup.ctx = _;
 
@@ -136,46 +184,62 @@
 				ctx: _
 			};
 
-				_.$popup.open = _.openPopup;
-			_.$popup.close = _.closePopup;
+				_.$popup.openPopup = _.openPopup;
+			_.$popup.closePopup = _.closePopup;
 
 				_.initEvents();
 			_.initOpenBtns();
 		};
-		SimplePopup.prototype.initEvents = function() {
-			let _ = this,
-				arr = ['popup', 'overlay'];	
+	SimplePopup.prototype.initEvents = function() {
 
-							if (_.$closeBtn) {
-				for (let i = 0; i < _.$closeBtn.length; i++) {
-					_.$closeBtn[i] && _.$closeBtn[i].addEventListener('click', _.closePopupHandler);
-				}
+			let _ = this;
+
+					if (_.$closeBtn) {
+			for (let i = 0; i < _.$closeBtn.length; i++) {
+				_.$closeBtn[i] && _.$closeBtn[i].addEventListener('click', _.closePopupHandler);
 			}
+		}
 
-			_.initAnimationEndEvents(_, 'popup');
-			_.initAnimationEndEvents(_, 'overlay');
+				_.initAnimationEndEvents(_, 'popup');
+		_.initAnimationEndEvents(_, 'overlay');
 
-				let e = new CustomEvent('init');
-			_.$popup.dispatchEvent(e);
+				_.dispatchEvent(_.$popup, 'popupinit');
+
 		};
-		SimplePopup.prototype.initAnimationEndEvents = function(_, elem) {
-			let el = '$' + elem; 
-			if (_[el]) {
-				_[el].addEventListener('animationend', function() {
-					let closeAnim = _[elem + 'CloseAnimation'].search(event.animationName);
-					if (closeAnim !== -1) {
-						this.style.animation = '';
-						this.classList.remove('active');
-						if (elem === 'popup') {
-							let e = new CustomEvent('close');
-							_[el].dispatchEvent(e);
-						}
-					} else if (closeAnim === -1 && elem === 'popup') {
-						let e = new CustomEvent('open');
-						_[el].dispatchEvent(e);
+	SimplePopup.prototype.initAnimationEndEvents = function(_, elem) {
+		let $elem = _['$' + elem];
+
+			if ($elem) {
+			let animation = _.options.animation[elem],
+				transition = _.options.transition[elem];
+
+				if (animation) {
+				$elem.addEventListener('animationend', function() {
+					if (event.animationName === animation.open.name) {
+						_.dispatchEvent($elem, elem + 'open');
+					} else {
+						$elem.style.animation = '';
+						$elem.classList.remove('active');
+						_.dispatchEvent($elem, elem + 'close');
+					}
+				});
+			} else if (transition) {
+
+					$elem.style[transition.property] = transition.from;
+
+					$elem.addEventListener('transitionend', function() {
+					if ($elem.style[transition.property] == transition.to) {
+						_.dispatchEvent($elem, elem + 'open');
+					} else {
+						$elem.style.transition = '';
+						$elem.classList.remove('active');
+						_.dispatchEvent($elem, elem + 'close');
 					}
 				});
 			}
+
+			}
+
 		};
 		SimplePopup.prototype.initOpenBtns = function() {
 			let _ = this,
@@ -207,65 +271,116 @@
 				_.$openBtn.refresh();
 
 			};
-		SimplePopup.prototype.openPopup = function() {
-			let _ = this.ctx || this;
+	SimplePopup.prototype.playAnimation = function(element, direction) {
+
+		  let _ = this,
+	    $element = _['$' + element],
+	    animation = _.options.animation[element] && _.options.animation[element][direction],
+	    transition = _.options.transition[element];
+
+		    setTransition = function(position) {
+	      position = position || 'to';
+
+		      let property = transition.property,
+	        timigFunction = transition.timigFunction,
+	        delay = transition.delay + 's',
+	        duration = transition.duration + 's';
+
+		      if (!$element.style.transition) {
+	        $element.style.transition = property + ' ' + timigFunction + ' ' + duration + ' ' + delay;
+	      }
+	      $element.style[property] = transition[position];
+	    };
+
+		  if (animation) {
+
+		    let name = animation.name,
+	      duration = (animation.duration || 0.5) + 's',
+	      delay = (animation.delay || 0) + 's',
+	      timigFunction = animation.timigFunction || 'ease';
+
+		    $element.style.animation = name + ' ' + timigFunction + ' ' + duration + ' ' + delay;
+
+		  } else if (transition) {
+
+		    if (direction === 'open') {
+	      setTimeout(setTransition, 1);
+	    } else {
+	      setTransition('from');
+	    }
+
+	    	  }
+
+		};
+	SimplePopup.prototype.openPopup = function() {
+		let _ = this.ctx || this,
+			overlay = _.$overlay,
+			popup = _.$popup;
+
 			_.iosFix();
 
-				_.$popup.caller = event && event.currentTarget;
+			popup.caller = event && event.currentTarget;
 
-				if (!_.$popup.classList.contains('active')) {
-				_.$popup.classList.add('active');
+			if (!popup.classList.contains('active')) {
 
-					_.pageY = pageYOffset;
+				_.pageY = pageYOffset;
 
-					if (_.$overlay) {
-					_.$overlay.classList.add('active');
-					_.$overlay.addEventListener('click', _.closePopupHandler);
-				}
+				popup.classList.add('active');
+			_.playAnimation('popup', 'open');
 
-					if (_.options.esc) {
-					document.addEventListener('keyup', _.closePopupHandler);
-				}
-				document.addEventListener('scroll', _.closePopupHandler);
+				if (overlay) {
+				overlay.classList.add('active');
+				_.playAnimation('overlay', 'open');
 
-					let e = new CustomEvent('beforeopen');
-				_.$popup.dispatchEvent(e);
+					overlay.addEventListener('click', _.closePopupHandler);
 			}
-		};
-		SimplePopup.prototype.closePopup = function() {
-			if (event && event.type === 'keyup' && event.keyCode !== 27) {
+
+				if (_.options.escToClose) {
+				document.addEventListener('keyup', _.closePopupHandler);
+			}
+			document.addEventListener('scroll', _.closePopupHandler);
+
+		  	_.dispatchEvent(popup, 'popupbeforeopen');
+
+			}
+	};
+	SimplePopup.prototype.closePopup = function() {
+		if (event && event.type === 'keyup' && event.keyCode !== 27) {
+			return;
+		}
+
+			let _ = this.ctx || this,
+			popup = _.$popup,
+			overlay = _.$overlay;
+
+			if (event && event.type === 'scroll' && Math.abs(pageYOffset - _.pageY) <= _.options.scrollThreshold) {
+			return;
+		}
+
+			if (event && event.type === 'scroll' && _.$inputs.length > 0) {
+			if (_.$inputs.some(function(el) {return el === document.activeElement})) {
 				return;
 			}
+		}
 
-				let _ = this.ctx || this;
+			if (popup.classList.contains('active')) {
+			_.playAnimation('popup', 'close');
 
-				if (event && event.type === 'scroll' && Math.abs(pageYOffset - _.pageY) <= _.options.scrollThreshold) {
-				return;
+				if (overlay) {
+				_.playAnimation('overlay', 'close');
 			}
+		}
 
-				if (event && event.type === 'scroll' && _.$inputs.length > 0) {
-				if (_.$inputs.some(function(el) {return el === document.activeElement;})) {
-					return;
-				}
-			}
+			if (_.options.escToClose) {
+			document.removeEventListener('keyup', _.closePopupHandler);
+		}
+		if (overlay) {
+			overlay.removeEventListener('click', _.closePopupHandler);
+		}
+		document.removeEventListener('scroll', _.closePopupHandler);
 
-				if (_.$popup.classList.contains('active')) {
-				_.$popup.style.animation = _.popupCloseAnimation;
-				if (_.$overlay) {
-					_.$overlay.style.animation = _.overlayCloseAnimation;
-				}
-			}
+			_.dispatchEvent(popup, 'popupbeforeclose');
 
-				if (_.options.esc) {
-				document.removeEventListener('keyup', _.closePopupHandler);
-			}
-			if (_.$overlay) {
-				_.$overlay.removeEventListener('click', _.closePopupHandler);
-			}
-			document.removeEventListener('scroll', _.closePopupHandler);
-
-				let e = new CustomEvent('beforeclose');
-			_.$popup.dispatchEvent(e);
 		};
 		SimplePopup.prototype.iosFix = function()  {
 			let _ = this;

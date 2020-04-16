@@ -50,13 +50,27 @@ document.addEventListener('DOMContentLoaded', function(){
 	})();
 	let popup = new SimplePopup({
 		popup: '.popup',
+		openBtn: '.open-popup-btn',
+		closeBtn: '.popup-close-btn',
+		escToClose: false,
+		// overlay: '.overlay',
+		// animation: {
+		// 	popup: {
+		// 		open: {
+		// 			name: 'fadeIn',
+		// 			timigFunction: 'linear',
+		// 			duration: 0.5,
+		// 			delay: 0
+		// 		},
+		// 		close: {
+		// 			name: 'fadeOut',
+		// 			delay: 0,
+		// 			timigFunction: 'linear',
+		// 			duration: 0.5
+		// 		}
+		// 	}
+		// },
 		// openBtn: '.open-popup-btn, .open-popup-another-btn',
-		// closeBtn: '.popup-close-btn',
-		overlay: '.overlay',
-		// for IE support
-		popupCloseAnimation: 'fadeOut .5s',
-		overlayCloseAnimation: 'fadeOut .5s',
-		esc: false,
 		// scrollThreshold: 50
 	});
 console.log([popup]);

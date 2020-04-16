@@ -15,11 +15,7 @@
     popup: '.popup',
     openBtn: '.open-popup-btn, .open-popup-another-btn',
     closeBtn: '.popup-close-btn',
-    overlay: '.overlay',
-    // for IE support
-    popupCloseAnimation: 'fadeOut .5s',
-    overlayCloseAnimation: 'fadeOut .5s',
-    esc: false,
+    overlay: '.overlay'
   });
 			</pre>
 		</code>
@@ -80,14 +76,10 @@ document.addEventListener('DOMContentLoaded', function(){
 		popup: '.popup',
 		openBtn: '.open-popup-btn, .open-popup-another-btn',
 		closeBtn: '.popup-close-btn',
-		overlay: '.overlay',
-		// for IE support
-		popupCloseAnimation: 'fadeOut .5s',
-		overlayCloseAnimation: 'fadeOut .5s',
-		esc: false,
+		overlay: '.overlay'
 	});
 
-	popup.addEventListener('beforeopen', function() {
+	popup.addEventListener('popupbeforeopen', function() {
 		// console.log(this.caller);
 	});
 
